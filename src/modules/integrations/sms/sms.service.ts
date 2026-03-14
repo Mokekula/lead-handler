@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import { Lead } from '@prisma/client';
 import { Env } from 'src/common/config/env.validation';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 
 @Injectable()
 export class SmsService {

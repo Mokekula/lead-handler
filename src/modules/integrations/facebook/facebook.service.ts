@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 
 @Injectable()
 export class FacebookService {

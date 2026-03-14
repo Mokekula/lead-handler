@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LeadService } from './lead.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LogsService } from 'src/logs/logs.service';
 import { HashingService } from 'src/common/utils/hashing.service';
 import { CrmService } from '../integrations/crm/crm.service';
 import { TelegramService } from '../integrations/telegram/telegram.service';
 import { FacebookService } from '../integrations/facebook/facebook.service';
 import { CreateLeadDto } from './dto/create-lead.dto';
+import { LogsService } from '../logs/logs.service';
 
 describe('LeadService', () => {
   let service: LeadService;

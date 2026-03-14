@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CrmService } from './crm.service';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 import { ConfigService } from '@nestjs/config';
 import { CreateLeadDto } from 'src/modules/lead/dto/create-lead.dto';
 

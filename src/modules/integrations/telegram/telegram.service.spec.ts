@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TelegramService } from './telegram.service';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { Lead } from '@prisma/client';

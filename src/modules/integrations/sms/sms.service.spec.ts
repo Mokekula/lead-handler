@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import { SmsService } from './sms.service';
 import { Lead } from '@prisma/client';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 
 // Mock the entire axios module
 jest.mock('axios');

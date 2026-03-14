@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import { Env } from 'src/common/config/env.validation';
 import { CreateLeadDto } from 'src/modules/lead/dto/create-lead.dto';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 import { BUYER_IDS_MAP, createBuyerTokensMap } from 'src/common/config/buyers.const';
 
 @Injectable()

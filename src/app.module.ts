@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
-import { LogsModule } from './logs/logs.module';
 import { validate } from './common/config/env.validation';
 import { HashingService } from './common/utils/hashing.service';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { LeadModule } from './modules/lead/lead.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { LogsModule } from './modules/logs/logs.module';
 
 @Module({
   imports: [
@@ -16,11 +16,11 @@ import { AuthModule } from './modules/auth/auth.module';
       validate,
     }),
     PrismaModule,
+    AuthModule,
     LogsModule,
     IntegrationsModule,
     LeadModule,
     AdminModule,
-    AuthModule,
   ],
 })
 export class AppModule {}

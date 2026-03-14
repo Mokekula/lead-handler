@@ -4,7 +4,7 @@ import { Lead } from '@prisma/client';
 import axios from 'axios';
 import { Env } from 'src/common/config/env.validation';
 import { CreateLeadDto } from 'src/modules/lead/dto/create-lead.dto';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()

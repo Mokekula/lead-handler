@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from '../logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HashingService } from 'src/common/utils/hashing.service';
 import { CrmService } from '../integrations/crm/crm.service';

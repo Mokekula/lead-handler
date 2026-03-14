@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FacebookService } from './facebook.service';
-import { LogsService } from 'src/logs/logs.service';
+import { LogsService } from 'src/modules/logs/logs.service';
 
 // Mock the entire axios module
 jest.mock('axios');
