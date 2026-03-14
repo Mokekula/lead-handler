@@ -1,0 +1,74 @@
+# for local development ports are 3001 for frontend and 4001 for backend
+services:
+  backend:
+    image: node:latest
+    container_name: lead-handler-backend
+    ports:
+      - "${LEAD_HANDLER_APP_PORT}:${LEAD_HANDLER_APP_PORT}"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL_POSTGRES}
+      - LEAD_HANDLER_APP_PORT=${LEAD_HANDLER_APP_PORT}
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app # Mount the current directory to allow hot-reloading
+      - /usr/src/app/node_modules # Prevent node_modules from being overwritten
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    command: sh -c "npm i && npm run build && npm run prisma && npm run start:dev"
+    networks:
+      - lead-handler-network
+      - shared-network
+  frontend:
+    image: node:latest
+    container_name: lead-handler-frontend
+    ports:
+      - "${LEAD_HANDLER_FRONTEND_PORT}:${LEAD_HANDLER_FRONTEND_PORT}"
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+      - LEAD_HANDLER_FRONTEND_PORT=${LEAD_HANDLER_FRONTEND_PORT}
+    working_dir: /usr/src/app
+    volumes:
+      - ./frontend:/usr/src/app # Mount the client directory
+      - /usr/src/app/node_modules # Prevent node_modules from being overwritten
+    depends_on:
+      - backend
+    restart: unless-stopped
+    command: sh -c "npm install --include=dev && 
+                npm run build && 
+               npm run dev"
+    networks:
+      - lead-handler-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_ENCODED}
+      POSTGRES_DB: lead_handler
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d lead_handler"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lead-handler-network
+
+volumes:
+  postgres_data:
+
+networks:
+  lead-handler-network:
+    name: lead-handler-network
+    driver: bridge
+  shared-network:
+    name: shared-network
+    external: true

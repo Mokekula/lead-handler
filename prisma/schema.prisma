@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id              Int              @id @default(autoincrement())
+  fb_token        String?
+  pixel           String?
+  link_id         String?
+  api_token       String?
+  fullPhone       String?
+  funnel          String?
+  offerId         String?
+  flowId          String?
+  buyerId         String?
+  source          String?
+  fname           String?
+  lname           String?
+  email           String?
+  fullphone       String?
+  ip              String?
+  buyer           String?
+  domain          String?
+  country         String?
+  iso             String?
+  language        String?
+  utm_source      String?
+  clickid         String?
+  utm_campaign    String?
+  utm_content     String?
+  adsetName       String?
+  adName          String?
+  FBData          FBData?
+  DeviceInfo      DeviceInfo?      @relation(fields: [deviceInfoId], references: [id])
+  ConversionEvent ConversionEvent?
+  Logs            Logs?            @relation(fields: [logsId], references: [id])
+  logsId          Int?
+  deviceInfoId    Int?
+}
+
+model FBData {
+  id                String  @id @default(cuid())
+  em                String?
+  fn                String?
+  ln                String?
+  ph                String?
+  country           String?
+  client_ip_address String?
+  client_user_agent String?
+  fbc               String?
+  fbp               String?
+  external_id       String?
+
+  leadId Int?   @unique
+  lead   Lead?  @relation(fields: [leadId], references: [id])
+  Logs   Logs[]
+}
+
+model ConversionEvent {
+  id               Int      @id @default(autoincrement())
+  currency         String?
+  value            Float?
+  content_name     String?
+  content_category String?
+  content_type     String?
+  createdAt        DateTime @default(now())
+
+  // Relation fields
+  leadId Int    @unique
+  lead   Lead   @relation(fields: [leadId], references: [id])
+  Logs   Logs[]
+}
+
+model DeviceInfo {
+  id             Int      @id @default(autoincrement())
+  timestamp      DateTime @default(now())
+  deviceType     String?
+  userAgent      String?
+  os             String?
+  osVersion      String?
+  browser        String?
+  browserVersion String?
+  ip             String?
+  language       String?
+  Lead           Lead[]
+}
+
+model Logs {
+  id                Int              @id @default(autoincrement())
+  message           String?
+  severity          String?
+  context           String?
+  timestamp         DateTime         @default(now())
+  leadId            Int
+  FBData            FBData?          @relation(fields: [fBDataId], references: [id])
+  ConversionEvent   ConversionEvent? @relation(fields: [conversionEventId], references: [id])
+  // lead              Lead             @relation(fields: [leadId], references: [id])
+  fBDataId          String?
+  conversionEventId Int?
+  Lead              Lead[]
+}
+
+model TelegramSubscriber {
+  id        Int      @id @default(autoincrement())
+  chatId    String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
