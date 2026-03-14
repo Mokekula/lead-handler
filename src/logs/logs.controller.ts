@@ -1,7 +1,9 @@
-import { Controller, Get, Param, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { LogsService } from './logs.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/logs')
 export class LogsController {
   constructor(
