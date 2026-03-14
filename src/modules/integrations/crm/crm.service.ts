@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config/dist/config.service';
 import { Env } from 'src/common/config/env.validation';
 import { CreateLeadDto } from 'src/modules/lead/dto/create-lead.dto';
 import { LogsService } from 'src/logs/logs.service';
+import { BUYER_IDS_MAP, createBuyerTokensMap } from 'src/common/config/buyers.const';
 
 @Injectable()
 export class CrmService {
@@ -12,7 +13,7 @@ export class CrmService {
     private config: ConfigService<Env, true>,
   ) {}
 
-  public async sendDataToRobotnikTogler(send: boolean): Promise<void> {
+  public async sendDataToRobotnikToggler(send: boolean): Promise<void> {
     if (send) {
       await this.logger.info('Sending data to Robotnik', 0o7, 'robotnik');
     } else {
@@ -62,8 +63,6 @@ export class CrmService {
           },
         },
       };
-
-      console.log(this.config.get('ROBOTNIK_URL'));
 
       const config = {
         method: 'post',
@@ -154,7 +153,7 @@ export class CrmService {
         headers: {
           'Content-Type': 'application/json',
         },
-        url: `......`,
+        url: this.config.get('ELNOPY_URL'),
         timeout: 20000,
         data: dataForElnopy,
       });
@@ -256,7 +255,7 @@ export class CrmService {
     try {
       const response = await axios({
         method: 'post',
-        url: `.......`,
+        url: this.config.get('ALTERCPA_URL'),
         timeout: 30000,
         data: dataForAlter,
       });
@@ -284,5 +283,30 @@ export class CrmService {
       await this.logger.error(`Alter API Error: ${JSON.stringify(error)}`, leadId, 'alter');
       throw new Error(error.message);
     }
+  }
+
+  /**
+   * Generates a numeric buyer ID based on the buyer name provided.
+   *
+   * @param {string} buyer - The name of the buyer. Valid values include "vlasnyk", "legkokbbb", "taipan", "onion", "london", and "pool".
+   * @return {number} The corresponding numeric buyer ID. Returns 0 if the buyer name does not match any predefined value.
+   */
+  private generateBuyerId(buyer: string): number {
+    return BUYER_IDS_MAP[buyer.toLowerCase()] ?? 0;
+  }
+
+  /**
+   * Generates and returns a token based on the specified buyer identifier.
+   *
+   * @param {string} buyer - The identifier for the buyer to retrieve the corresponding token.
+   *                         Valid values are "vlasnyk", "legkokbbb", "taipan", "onion", "london", "pool".
+   * @return {string} The appropriate token for the specified buyer. If the buyer identifier
+   *                  doesn't match any case, a default token is returned.
+   */
+  private generateBuyerToken(buyer: string): string {
+    const env = this.config.get<Env>('', { infer: true });
+    const defaultBuyerToken = '0blYEt43pwdAa2VKdgrjcVb3Z2Jj0bn0iWhNem1ZOLF9mjGbCvn3WL6Mker4';
+
+    return createBuyerTokensMap(env)[buyer.toLowerCase()] ?? defaultBuyerToken;
   }
 }

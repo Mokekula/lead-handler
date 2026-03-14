@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { LogsModule } from './logs/logs.module';
 import { validate } from './common/config/env.validation';
@@ -21,6 +20,5 @@ import { AdminModule } from './modules/admin/admin.module';
     LeadModule,
     AdminModule,
   ],
-  providers: [AppService, HashingService],
 })
 export class AppModule {}

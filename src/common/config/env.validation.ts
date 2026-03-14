@@ -31,6 +31,8 @@ export const envSchema = z.object({
   // # CRM URLs
   ROBOTNIK_URL: z.url().refine(checkHttpUrl),
   ROBOTNIK_GEOIP_URL: z.url().refine(checkHttpUrl),
+  ELNOPY_URL: z.url().refine(checkHttpUrl),
+  ALTERCPA_URL: z.url().refine(checkHttpUrl),
   ALTERCPA_GET_STATUSES_URL: z.url().refine(checkHttpUrl),
   HUSTLE_TEAM_ROBOTNIK_URL: z.url().refine(checkHttpUrl),
 
