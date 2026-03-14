@@ -7,6 +7,7 @@ import { PrismaService } from './prisma/prisma.service';
 import axios from 'axios';
 import { LogsService } from './logs/logs.service';
 import type { Env } from './common/config/env.validation';
+import { BUYER_IDS_MAP, createBuyerTokensMap } from './common/config/buyers.const';
 
 /**
  * The AppService class provides methods for handling lead creation,
@@ -583,29 +584,7 @@ export class AppService {
    * @return {number} The corresponding numeric buyer ID. Returns 0 if the buyer name does not match any predefined value.
    */
   private generate_buyer_id(buyer: string): number {
-    switch (buyer) {
-      case 'vlasnyk':
-        return 4;
-        break;
-      case 'legkokbbb':
-        return 5;
-        break;
-      case 'taipan':
-        return 6;
-        break;
-      case 'onion':
-        return 11;
-        break;
-      case 'london':
-        return 13;
-        break;
-      case 'pool':
-        return 16;
-        break;
-      default:
-        return 0;
-        break;
-    }
+    return BUYER_IDS_MAP[buyer.toLowerCase()] ?? 0;
   }
 
   /**
@@ -617,36 +596,10 @@ export class AppService {
    *                  doesn't match any case, a default token is returned.
    */
   private generate_buyer_token(buyer: string): string {
-    const vlasnykToken = this.config.get('VLASNYK_TOKEN');
-    const legkokbbbToken = this.config.get('LEGKOKBBB_TOKEN');
-    const taipanToken = this.config.get('TAIPAN_TOKEN');
-    const onionToken = this.config.get('ONION_TOKEN');
-    const londonToken = this.config.get('LONDON_TOKEN');
-    const poolToken = this.config.get('POOL_TOKEN');
+    const env = this.config.get<Env>('', { infer: true });
+    const defaultBuyerToken = '0blYEt43pwdAa2VKdgrjcVb3Z2Jj0bn0iWhNem1ZOLF9mjGbCvn3WL6Mker4';
 
-    switch (buyer) {
-      case 'vlasnyk':
-        return vlasnykToken;
-        break;
-      case 'legkokbbb':
-        return legkokbbbToken;
-        break;
-      case 'taipan':
-        return taipanToken;
-        break;
-      case 'onion':
-        return onionToken;
-        break;
-      case 'london':
-        return londonToken;
-        break;
-      case 'pool':
-        return poolToken;
-        break;
-      default:
-        return '0blYEt43pwdAa2VKdgrjcVb3Z2Jj0bn0iWhNem1ZOLF9mjGbCvn3WL6Mker4';
-        break;
-    }
+    return createBuyerTokensMap(env)[buyer.toLowerCase()] ?? defaultBuyerToken;
   }
 
   /**
