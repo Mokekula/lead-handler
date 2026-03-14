@@ -1,9 +1,11 @@
 import { IsString, IsOptional, IsEmail, IsNumber } from 'class-validator';
+import { Expose } from 'class-transformer';
 
 export class CreateLeadDto {
   @IsOptional()
   @IsString()
-  fb_token?: string;
+  @Expose({ name: 'fb_token' })
+  fbToken?: string;
 
   @IsOptional()
   @IsString()
@@ -11,11 +13,13 @@ export class CreateLeadDto {
 
   @IsOptional()
   @IsString()
-  link_id?: string;
+  @Expose({ name: 'link_id' })
+  linkId?: string;
 
   @IsOptional()
   @IsString()
-  api_token?: string;
+  @Expose({ name: 'api_token' })
+  apiToken?: string;
 
   @IsOptional()
   @IsString()
@@ -67,7 +71,8 @@ export class CreateLeadDto {
 
   @IsOptional()
   @IsString()
-  utm_source?: string;
+  @Expose({ name: 'utm_source' })
+  utmSource?: string;
 
   @IsOptional()
   @IsString()
@@ -75,14 +80,17 @@ export class CreateLeadDto {
 
   @IsOptional()
   @IsString()
-  utm_campaign?: string;
+  @Expose({ name: 'utm_campaign' })
+  utmCampaign?: string;
 
   @IsOptional()
   @IsString()
-  utm_content?: string;
+  @Expose({ name: 'utm_content' })
+  utmContent?: string;
 
   @IsOptional()
   @IsString()
+  @Expose({ name: 'adset_name' })
   adsetName?: string;
 
   @IsOptional()
@@ -171,23 +179,23 @@ export class CreateLeadDto {
 
   @IsOptional()
   @IsString()
-  campaign_id?: string;
+  @Expose({ name: 'campaign_id' })
+  campaignId?: string;
 
   @IsOptional()
   @IsString()
-  adset_id?: string;
+  @Expose({ name: 'adset_id' })
+  adsetId?: string;
 
   @IsOptional()
   @IsString()
-  utm_placement?: string;
+  @Expose({ name: 'utm_placement' })
+  utmPlacement?: string;
 
   @IsOptional()
   @IsString()
-  adset_name?: string;
-
-  @IsOptional()
-  @IsString()
-  ad_id?: string;
+  @Expose({ name: 'ad_id' })
+  adId?: string;
 
   @IsOptional()
   @IsString()

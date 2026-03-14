@@ -29,7 +29,7 @@ export class AppService {
   async createLead(createLeadDto: CreateLeadDto): Promise<string> {
     const lead = await this.prisma.lead.create({
       data: {
-        fb_token: createLeadDto.fb_token,
+        fb_token: createLeadDto.fbToken,
         pixel: createLeadDto.pixel,
         // link_id: linkId,
         // api_token: token,
@@ -48,10 +48,10 @@ export class AppService {
         country: createLeadDto.country,
         iso: createLeadDto.iso,
         language: createLeadDto.language,
-        utm_source: createLeadDto.utm_source,
+        utm_source: createLeadDto.utmSource,
         clickid: createLeadDto.clickid,
-        utm_campaign: createLeadDto.utm_campaign,
-        utm_content: createLeadDto.utm_content,
+        utm_campaign: createLeadDto.utmCampaign,
+        utm_content: createLeadDto.utmContent,
         adName: createLeadDto.adName,
         adsetName: createLeadDto.adsetName,
         // Create the related FBData in the same operation
@@ -100,12 +100,12 @@ export class AppService {
     });
 
     // if fb token and pixel - send data to facebook
-    if (createLeadDto.fb_token && createLeadDto.pixel) {
+    if (createLeadDto.fbToken && createLeadDto.pixel) {
       try {
-        await this.sendDataToFacebook('Lead', lead, createLeadDto.fb_token, createLeadDto.pixel);
+        await this.sendDataToFacebook('Lead', lead, createLeadDto.fbToken, createLeadDto.pixel);
         // await this.logger.info(`Do not sending data about registration...`, lead.id, 'facebook')
         // if (createLeadDto.funnel === 'Immediate Nextgen' || createLeadDto.funnel === 'immediate nextgen') {
-        //     await this.sendDataToFacebook('Purchase', lead, createLeadDto.fb_token, createLeadDto.pixel);
+        //     await this.sendDataToFacebook('Purchase', lead, createLeadDto.fbToken, createLeadDto.pixel);
         // }
       } catch (fbError) {
         await this.logger.error(
@@ -198,9 +198,9 @@ export class AppService {
             domain: createLeadDto.domain,
             adset_name: createLeadDto.adsetName,
             ad_name: createLeadDto.adName,
-            utm_source: createLeadDto.utm_source,
-            utm_campaign: createLeadDto.utm_campaign,
-            utm_content: createLeadDto.utm_content,
+            utm_source: createLeadDto.utmSource,
+            utm_campaign: createLeadDto.utmCampaign,
+            utm_content: createLeadDto.utmContent,
             deviceInfo: {
               language: createLeadDto.language,
               deviceType: createLeadDto.deviceType,
@@ -323,7 +323,7 @@ export class AppService {
       language: createLeadDto.language,
       funnel: createLeadDto.funnel,
       source: createLeadDto.funnel,
-      utm_source: createLeadDto.utm_source,
+      utm_source: createLeadDto.utmSource,
       utm_campaign: createLeadDto.adsetName,
       click_id: createLeadDto.clickid,
       utm_content: createLeadDto.adName,
@@ -419,15 +419,15 @@ export class AppService {
       sub3: createLeadDto.sub3,
       sub4: createLeadDto.sub4,
       sub5: createLeadDto.sub5,
-      utm_campaign: createLeadDto.utm_campaign,
-      utm_source: createLeadDto.utm_source,
+      utm_campaign: createLeadDto.utmCampaign,
+      utm_source: createLeadDto.utmSource,
       ad_name: createLeadDto.adName,
-      utm_placement: createLeadDto.utm_placement,
-      campaign_id: createLeadDto.campaign_id,
-      adset_id: createLeadDto.adset_id,
+      utm_placement: createLeadDto.utmPlacement,
+      campaign_id: createLeadDto.campaignId,
+      adset_id: createLeadDto.adsetId,
       pixel: createLeadDto.pixel,
-      ad_id: createLeadDto.ad_id,
-      adset_name: createLeadDto.adset_name,
+      ad_id: createLeadDto.adId,
+      adset_name: createLeadDto.adsetName,
       ip: createLeadDto.ip,
       ua: createLeadDto.userAgent,
       domain: createLeadDto.domain,
@@ -842,8 +842,8 @@ export class AppService {
       `Buyer: *${createLeadDto.buyer}*\n` +
       `Funnel: ${createLeadDto.funnel}\n` +
       `Source: ${createLeadDto.source || 'N/A'}\n` +
-      `UTM Source: ${createLeadDto.utm_source || 'N/A'}\n` +
-      `UTM Campaign: ${createLeadDto.utm_campaign || 'N/A'}\n` +
+      `UTM Source: ${createLeadDto.utmSource || 'N/A'}\n` +
+      `UTM Campaign: ${createLeadDto.utmCampaign || 'N/A'}\n` +
       `Created: ${new Date().toISOString()}`;
 
     const url = `https://api.telegram.org/bot${this.telegramBotToken}/sendMessage`;
