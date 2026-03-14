@@ -7,6 +7,7 @@ import { HashingService } from './common/utils/hashing.service';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { LeadModule } from './modules/lead/lead.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AdminModule } from './modules/admin/admin.module';
     IntegrationsModule,
     LeadModule,
     AdminModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
