@@ -22,7 +22,6 @@ model Lead {
   fname           String?
   lname           String?
   email           String?
-  fullphone       String?
   ip              String?
   buyer           String?
   domain          String?
@@ -38,8 +37,7 @@ model Lead {
   FBData          FBData?
   DeviceInfo      DeviceInfo?      @relation(fields: [deviceInfoId], references: [id])
   ConversionEvent ConversionEvent?
-  Logs            Logs?            @relation(fields: [logsId], references: [id])
-  logsId          Int?
+  Logs            Logs[]
   deviceInfoId    Int?
 }
 
@@ -90,19 +88,28 @@ model DeviceInfo {
   Lead           Lead[]
 }
 
+enum LogSeverity {
+  DEBUG
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
 model Logs {
   id                Int              @id @default(autoincrement())
   message           String?
-  severity          String?
+  severity          LogSeverity?
   context           String?
   timestamp         DateTime         @default(now())
   leadId            Int
+  lead              Lead             @relation(fields: [leadId], references: [id])
   FBData            FBData?          @relation(fields: [fBDataId], references: [id])
   ConversionEvent   ConversionEvent? @relation(fields: [conversionEventId], references: [id])
-  // lead              Lead             @relation(fields: [leadId], references: [id])
   fBDataId          String?
   conversionEventId Int?
-  Lead              Lead[]
+
+  @@index([timestamp, leadId, severity, context])
 }
 
 model TelegramSubscriber {

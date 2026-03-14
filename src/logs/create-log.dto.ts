@@ -1,12 +1,7 @@
 import { IsString, IsOptional, IsEnum, IsInt } from 'class-validator';
+import { LogSeverity } from '@prisma/client';
 
-export enum LogSeverity {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARNING = 'warning',
-  ERROR = 'error',
-  CRITICAL = 'critical',
-}
+export { LogSeverity };
 
 export class CreateLogDto {
   @IsString()
