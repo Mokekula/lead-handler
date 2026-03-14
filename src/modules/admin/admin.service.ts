@@ -1,0 +1,27 @@
+import { Injectable } from '@nestjs/common';
+import { LogsService } from 'src/logs/logs.service';
+
+@Injectable()
+export class AdminService {
+  private isSendToRobotnik: boolean = true;
+
+  constructor(private logger: LogsService) {}
+
+  async toggleLeadDestination(
+    destination: 'robotnik' | 'elnopy',
+  ): Promise<{ currentDestination: string }> {
+    this.isSendToRobotnik = destination === 'robotnik';
+
+    await this.logger.info(`Lead destination switched to ${destination}`, 0, 'toggle');
+
+    return {
+      currentDestination: this.isSendToRobotnik ? 'robotnik' : 'elnopy',
+    };
+  }
+
+  async getCurrentLeadDestination(): Promise<{ currentDestination: string }> {
+    return {
+      currentDestination: this.isSendToRobotnik ? 'robotnik' : 'elnopy',
+    };
+  }
+}

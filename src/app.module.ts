@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { LogsModule } from './logs/logs.module';
@@ -8,6 +7,7 @@ import { validate } from './common/config/env.validation';
 import { HashingService } from './common/utils/hashing.service';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { LeadModule } from './modules/lead/lead.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -19,8 +19,8 @@ import { LeadModule } from './modules/lead/lead.module';
     LogsModule,
     IntegrationsModule,
     LeadModule,
+    AdminModule,
   ],
-  controllers: [AppController],
   providers: [AppService, HashingService],
 })
 export class AppModule {}
