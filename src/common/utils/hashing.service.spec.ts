@@ -30,7 +30,6 @@ describe('HashingService', () => {
 
     for (const [testCase, expectedHash] of testCases) {
       const newHash = service.hash(testCase);
-      console.log({ newHash, testCase });
 
       expect(newHash).toEqual(expectedHash);
     }
