@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CreateLeadDto } from './lead.dto';
 import { Lead } from '@prisma/client';
 import { PrismaService } from './prisma/prisma.service';
 import axios from 'axios';
 import { LogsService } from './logs/logs.service';
-import * as process from 'node:process';
+import type { Env } from './common/config/env.validation';
 
 /**
  * The AppService class provides methods for handling lead creation,
@@ -20,8 +21,9 @@ export class AppService {
   constructor(
     private prisma: PrismaService,
     private logger: LogsService,
+    private config: ConfigService<Env, true>,
   ) {
-    this.telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
+    this.telegramBotToken = this.config.get('TELEGRAM_BOT_TOKEN');
   }
 
   async createLead(createLeadDto: CreateLeadDto): Promise<string> {
@@ -213,12 +215,12 @@ export class AppService {
         },
       };
 
-      console.log(process.env.ROBOTNIK_URL);
+      console.log(this.config.get('ROBOTNIK_URL'));
 
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: process.env.ROBOTNIK_URL,
+        url: this.config.get('ROBOTNIK_URL'),
         timeout: 10000,
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +275,7 @@ export class AppService {
           timeout: 10000,
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.SMSCLUB_API_KEY}`,
+            Authorization: `Bearer ${this.config.get('SMSCLUB_API_KEY')}`,
           },
           data: {
             src_addr: 'Vebinar',
@@ -722,12 +724,12 @@ export class AppService {
    *                  doesn't match any case, a default token is returned.
    */
   private generate_buyer_token(buyer: string): string {
-    const vlasnykToken = process.env.VLASNYK_TOKEN;
-    const legkokbbbToken = process.env.LEGKOKBBB_TOKEN;
-    const taipanToken = process.env.TAIPAN_TOKEN;
-    const onionToken = process.env.ONION_TOKEN;
-    const londonToken = process.env.LONDON_TOKEN;
-    const poolToken = process.env.POOL_TOKEN;
+    const vlasnykToken = this.config.get('VLASNYK_TOKEN');
+    const legkokbbbToken = this.config.get('LEGKOKBBB_TOKEN');
+    const taipanToken = this.config.get('TAIPAN_TOKEN');
+    const onionToken = this.config.get('ONION_TOKEN');
+    const londonToken = this.config.get('LONDON_TOKEN');
+    const poolToken = this.config.get('POOL_TOKEN');
 
     switch (buyer) {
       case 'vlasnyk':
