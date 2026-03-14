@@ -1,14 +1,24 @@
-# for local development ports are 3001 for frontend and 4001 for backend
+# for local development ports are 3000 for frontend and 4000 for backend
 services:
   backend:
-    image: node:latest
+    image: node:22-alpine
     container_name: lead-handler-backend
     ports:
-      - "${LEAD_HANDLER_APP_PORT}:${LEAD_HANDLER_APP_PORT}"
+      - '${LEAD_HANDLER_APP_PORT}:${LEAD_HANDLER_APP_PORT}'
     environment:
       - NODE_ENV=${NODE_ENV}
+      - PORT=${LEAD_HANDLER_APP_PORT}
       - DATABASE_URL=${DATABASE_URL_POSTGRES}
       - LEAD_HANDLER_APP_PORT=${LEAD_HANDLER_APP_PORT}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - ROBOTNIK_URL=${ROBOTNIK_URL}
+      - SMSCLUB_API_KEY=${SMSCLUB_API_KEY}
+      - VLASNYK_TOKEN=${VLASNYK_TOKEN}
+      - LEGKOKBBB_TOKEN=${LEGKOKBBB_TOKEN}
+      - TAIPAN_TOKEN=${TAIPAN_TOKEN}
+      - ONION_TOKEN=${ONION_TOKEN}
+      - LONDON_TOKEN=${LONDON_TOKEN}
+      - POOL_TOKEN=${POOL_TOKEN}
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app # Mount the current directory to allow hot-reloading
@@ -21,13 +31,15 @@ services:
     networks:
       - lead-handler-network
       - shared-network
+
   frontend:
-    image: node:latest
+    image: node:22-alpine
     container_name: lead-handler-frontend
     ports:
-      - "${LEAD_HANDLER_FRONTEND_PORT}:${LEAD_HANDLER_FRONTEND_PORT}"
+      - '${LEAD_HANDLER_FRONTEND_PORT}:${LEAD_HANDLER_FRONTEND_PORT}'
     environment:
-      - REACT_APP_API_URL=${REACT_APP_API_URL}
+      - NEXT_PUBLIC_LOGS_URL=${NEXT_PUBLIC_LOGS_URL}
+      - NEXT_PUBLIC_PASSWORD=${NEXT_PUBLIC_PASSWORD}
       - LEAD_HANDLER_FRONTEND_PORT=${LEAD_HANDLER_FRONTEND_PORT}
     working_dir: /usr/src/app
     volumes:
@@ -36,17 +48,17 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-    command: sh -c "npm install --include=dev && 
-                npm run build && 
-               npm run dev"
+    command: sh -c "npm install --include=dev &&
+      npm run build &&
+      npm run dev"
     networks:
       - lead-handler-network
 
   postgres:
-    image: postgres:latest
+    image: postgres:16
     container_name: postgres
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_ENCODED}
@@ -55,7 +67,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d lead_handler"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d lead_handler']
       interval: 5s
       timeout: 5s
       retries: 5

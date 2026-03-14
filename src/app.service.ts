@@ -768,7 +768,7 @@ export class AppService {
    *                  doesn't match any case, a default token is returned.
    */
   private generate_buyer_token(buyer: string): string {
-    const vlasnykToken = process.env.VLASYNK_TOKEN;
+    const vlasnykToken = process.env.VLASNYK_TOKEN;
     const legkokbbbToken = process.env.LEGKOKBBB_TOKEN;
     const taipanToken = process.env.TAIPAN_TOKEN;
     const onionToken = process.env.ONION_TOKEN;
