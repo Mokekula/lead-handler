@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { LogsModule } from './logs/logs.module';
 import { validate } from './common/config/env.validation';
+import { HashingService } from './common/utils/hashing.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { validate } from './common/config/env.validation';
     LogsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, HashingService],
 })
 export class AppModule {}
