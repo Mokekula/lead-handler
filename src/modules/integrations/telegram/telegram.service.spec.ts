@@ -12,39 +12,18 @@ const mockedAxios = axios as jest.MockedFunction<typeof axios>;
 
 describe('TelegramService', () => {
   let service: TelegramService;
-  let logsService: LogsService;
-  let configService: ConfigService;
 
-  // Mock data for a valid Lead
-  const mockLead: Lead = {
+  const mockLead: Partial<Lead> = {
     id: 1,
-    fb_token: null,
-    pixel: null,
-    link_id: null,
-    api_token: null,
     fullPhone: '+380991234567',
     funnel: 'main',
-    offerId: null,
-    flowId: null,
-    buyerId: null,
     source: 'facebook',
     fname: 'Name',
     lname: 'Lastname',
     email: 'user@example.com',
-    ip: null,
     buyer: 'buyer',
-    domain: null,
     country: 'US',
-    iso: null,
-    language: null,
-    utm_source: null,
-    clickid: null,
-    utm_campaign: null,
-    utm_content: null,
-    adsetName: null,
-    adName: null,
-    deviceInfoId: null,
-  } as Lead;
+  };
 
   const mockCreateLeadDto = {
     fname: 'Name',
@@ -90,8 +69,6 @@ describe('TelegramService', () => {
     }).compile();
 
     service = module.get<TelegramService>(TelegramService);
-    logsService = module.get<LogsService>(LogsService);
-    configService = module.get<ConfigService>(ConfigService);
 
     jest.clearAllMocks();
   });
@@ -135,20 +112,9 @@ describe('TelegramService', () => {
 
   describe('sendTelegramNotification', () => {
     it('should skip if token missing', async () => {
-      mockConfigService.get.mockReturnValueOnce(null);
+      Object.defineProperty(service, 'telegramBotToken', { value: '' });
 
-      const module = await Test.createTestingModule({
-        providers: [
-          TelegramService,
-          { provide: PrismaService, useValue: mockPrisma },
-          { provide: LogsService, useValue: mockLogsService },
-          { provide: ConfigService, useValue: mockConfigService },
-        ],
-      }).compile();
-
-      const serviceNoToken = module.get<TelegramService>(TelegramService);
-
-      await serviceNoToken.sendTelegramNotification(mockLead, mockCreateLeadDto as any);
+      await service.sendTelegramNotification(mockLead as Lead, mockCreateLeadDto);
 
       expect(mockLogsService.info).toHaveBeenCalledWith(
         'Telegram notification skipped: Missing bot token',
@@ -160,7 +126,7 @@ describe('TelegramService', () => {
     it('should skip if no subscribers', async () => {
       mockPrisma.telegramSubscriber.findMany.mockResolvedValue([]);
 
-      await service.sendTelegramNotification(mockLead, mockCreateLeadDto as any);
+      await service.sendTelegramNotification(mockLead as Lead, mockCreateLeadDto);
 
       expect(mockLogsService.info).toHaveBeenCalledWith(
         'Telegram notification skipped: No active subscribers',
@@ -176,7 +142,7 @@ describe('TelegramService', () => {
 
       mockedAxios.mockResolvedValue({});
 
-      await service.sendTelegramNotification(mockLead, mockCreateLeadDto as any);
+      await service.sendTelegramNotification(mockLead as Lead, mockCreateLeadDto);
 
       expect(mockedAxios).toHaveBeenCalledTimes(2);
 
@@ -192,7 +158,7 @@ describe('TelegramService', () => {
 
       mockedAxios.mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('telegram error'));
 
-      await service.sendTelegramNotification(mockLead, mockCreateLeadDto as any);
+      await service.sendTelegramNotification(mockLead as Lead, mockCreateLeadDto);
 
       expect(mockLogsService.error).toHaveBeenCalled();
     });

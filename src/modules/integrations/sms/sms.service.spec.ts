@@ -11,8 +11,6 @@ const mockedAxios = axios as jest.MockedFunction<typeof axios>;
 
 describe('SmsService', () => {
   let service: SmsService;
-  let logsService: LogsService;
-  let configService: ConfigService;
 
   // Mock data for a valid Lead
   const mockLead: Partial<Lead> = {
@@ -47,8 +45,6 @@ describe('SmsService', () => {
     }).compile();
 
     service = module.get<SmsService>(SmsService);
-    logsService = module.get<LogsService>(LogsService);
-    configService = module.get<ConfigService>(ConfigService);
 
     jest.clearAllMocks();
   });

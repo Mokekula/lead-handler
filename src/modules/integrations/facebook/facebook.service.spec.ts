@@ -9,7 +9,6 @@ const mockedAxios = axios as jest.MockedFunction<typeof axios>;
 
 describe('FacebookService', () => {
   let service: FacebookService;
-  let logsService: LogsService;
 
   // Mock implementation for LogsService
   const mockLogsService = {
@@ -48,7 +47,6 @@ describe('FacebookService', () => {
     }).compile();
 
     service = module.get<FacebookService>(FacebookService);
-    logsService = module.get<LogsService>(LogsService);
 
     jest.clearAllMocks();
   });

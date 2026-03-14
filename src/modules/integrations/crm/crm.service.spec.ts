@@ -10,11 +10,8 @@ const mockedAxios = axios as jest.MockedFunction<typeof axios>;
 
 describe('CrmService', () => {
   let service: CrmService;
-  let logsService: LogsService;
-  let configService: ConfigService;
 
-  // Mock data for a valid Lead
-  const mockLead: CreateLeadDto = {
+  const mockCreateLeadDto: Partial<CreateLeadDto> = {
     fname: 'Name',
     lname: 'Lastname',
     email: 'user@example.com',
@@ -35,22 +32,7 @@ describe('CrmService', () => {
     externalId: 'ext123',
     deviceType: 'mobile',
     userAgent: 'ua',
-    os: 'ios',
-    osVersion: '16',
-    browser: 'safari',
-    browserVersion: '16',
     ip: '127.0.0.1',
-    sub1: null,
-    sub2: null,
-    sub3: null,
-    sub4: null,
-    sub5: null,
-    utmPlacement: null,
-    campaignId: null,
-    adsetId: null,
-    pixel: null,
-    adId: null,
-    phone: null,
   };
 
   // Mock implementation for LogsService
@@ -81,9 +63,9 @@ describe('CrmService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('sendDataToRobotnikTogler', () => {
+  describe('sendDataToRobotnikToggler', () => {
     it('should log sending when send=true', async () => {
-      await service.sendDataToRobotnikTogler(true);
+      await service.sendDataToRobotnikToggler(true);
       expect(mockLogsService.info).toHaveBeenCalledWith(
         'Sending data to Robotnik',
         0o7,
@@ -92,7 +74,7 @@ describe('CrmService', () => {
     });
 
     it('should log not sending when send=false', async () => {
-      await service.sendDataToRobotnikTogler(false);
+      await service.sendDataToRobotnikToggler(false);
       expect(mockLogsService.info).toHaveBeenCalledWith(
         'Not sending data to Robotnik',
         0o7,
@@ -107,7 +89,7 @@ describe('CrmService', () => {
         data: { data: { createLeadFromApi: { autologin: 'autologin-url' } } },
       });
 
-      const result = await service.sendToRobotnik(mockLead, 1);
+      const result = await service.sendToRobotnik(mockCreateLeadDto, 1);
       expect(result).toBe('autologin-url');
       expect(mockLogsService.info).toHaveBeenCalled();
     });
@@ -117,7 +99,7 @@ describe('CrmService', () => {
         data: { data: { createLeadFromApi: { autologin: null } } },
       });
 
-      const result = await service.sendToRobotnik(mockLead, 1);
+      const result = await service.sendToRobotnik(mockCreateLeadDto, 1);
       expect(result).toBe('https://google.com');
     });
 
@@ -126,7 +108,7 @@ describe('CrmService', () => {
         data: { errors: [{ message: 'Some error' }] },
       });
 
-      const result = await service.sendToRobotnik(mockLead, 1);
+      const result = await service.sendToRobotnik(mockCreateLeadDto, 1);
       expect(result).toBe('Some error');
       expect(mockLogsService.error).toHaveBeenCalledWith(
         'Error sending data to Robotnik: Some error',
@@ -138,7 +120,7 @@ describe('CrmService', () => {
     it('should catch network errors', async () => {
       mockedAxios.mockRejectedValue(new Error('Network Error'));
 
-      const result = await service.sendToRobotnik(mockLead, 1);
+      const result = await service.sendToRobotnik(mockCreateLeadDto, 1);
       expect(result).toBe('Something went wrong, please try again later');
       expect(mockLogsService.error).toHaveBeenCalled();
     });
@@ -148,7 +130,7 @@ describe('CrmService', () => {
     it('should return autologin on success', async () => {
       mockedAxios.mockResolvedValue({ data: { success: true, autologin: 'elnopy-url' } });
 
-      const result = await service.sendDataToElnopy(mockLead, 'link1', 'token1', 1);
+      const result = await service.sendDataToElnopy(mockCreateLeadDto, 'link1', 'token1', 1);
       expect(result).toBe('elnopy-url');
       expect(mockLogsService.info).toHaveBeenCalled();
     });
@@ -156,7 +138,7 @@ describe('CrmService', () => {
     it('should return google.com if autologin missing', async () => {
       mockedAxios.mockResolvedValue({ data: { success: true, autologin: null } });
 
-      const result = await service.sendDataToElnopy(mockLead, 'link1', 'token1', 1);
+      const result = await service.sendDataToElnopy(mockCreateLeadDto, 'link1', 'token1', 1);
       expect(result).toBe('https://google.com');
     });
 
@@ -165,17 +147,17 @@ describe('CrmService', () => {
         data: { success: false, message: 'Phone number not valid!' },
       });
 
-      await expect(service.sendDataToElnopy(mockLead, 'link1', 'token1', 1)).rejects.toThrow(
-        'Phone number not valid!',
-      );
+      await expect(
+        service.sendDataToElnopy(mockCreateLeadDto, 'link1', 'token1', 1),
+      ).rejects.toThrow('Phone number not valid!');
     });
 
     it('should throw on axios error', async () => {
       mockedAxios.mockRejectedValue({ message: 'Axios failed' });
 
-      await expect(service.sendDataToElnopy(mockLead, 'link1', 'token1', 1)).rejects.toThrow(
-        'Axios failed',
-      );
+      await expect(
+        service.sendDataToElnopy(mockCreateLeadDto, 'link1', 'token1', 1),
+      ).rejects.toThrow('Axios failed');
       expect(mockLogsService.error).toHaveBeenCalled();
     });
   });
@@ -184,7 +166,13 @@ describe('CrmService', () => {
     it('should return response url if status ok', async () => {
       mockedAxios.mockResolvedValue({ data: { status: 'ok', url: 'alter-url' } });
 
-      const result = await service.sendDataToAlter(mockLead, 'buyer1', 'offer1', 'flow1', 1);
+      const result = await service.sendDataToAlter(
+        mockCreateLeadDto,
+        'buyer1',
+        'offer1',
+        'flow1',
+        1,
+      );
       expect(result).toBe('alter-url');
       expect(mockLogsService.info).toHaveBeenCalled();
     });
@@ -192,14 +180,26 @@ describe('CrmService', () => {
     it('should return google.com if url missing', async () => {
       mockedAxios.mockResolvedValue({ data: { status: 'ok' } });
 
-      const result = await service.sendDataToAlter(mockLead, 'buyer1', 'offer1', 'flow1', 1);
+      const result = await service.sendDataToAlter(
+        mockCreateLeadDto,
+        'buyer1',
+        'offer1',
+        'flow1',
+        1,
+      );
       expect(result).toBe('https://google.com');
     });
 
     it('should log error and return error string if status not ok', async () => {
       mockedAxios.mockResolvedValue({ data: { status: 'fail', error: 'fail-error' } });
 
-      const result = await service.sendDataToAlter(mockLead, 'buyer1', 'offer1', 'flow1', 1);
+      const result = await service.sendDataToAlter(
+        mockCreateLeadDto,
+        'buyer1',
+        'offer1',
+        'flow1',
+        1,
+      );
       expect(result).toBe('fail-error');
       expect(mockLogsService.error).toHaveBeenCalled();
     });
@@ -208,7 +208,7 @@ describe('CrmService', () => {
       mockedAxios.mockRejectedValue(new Error('Network fail'));
 
       await expect(
-        service.sendDataToAlter(mockLead, 'buyer1', 'offer1', 'flow1', 1),
+        service.sendDataToAlter(mockCreateLeadDto, 'buyer1', 'offer1', 'flow1', 1),
       ).rejects.toThrow('Network fail');
       expect(mockLogsService.error).toHaveBeenCalled();
     });

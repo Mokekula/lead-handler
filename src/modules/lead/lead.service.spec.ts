@@ -17,55 +17,20 @@ describe('LeadService', () => {
   let crmService: CrmService;
   let logger: LogsService;
 
-  // Mock data for a valid CreateLeadDto
-  const leadDto: CreateLeadDto = {
+  const leadDto: Partial<CreateLeadDto> = {
     fname: 'Name',
     lname: 'Lastname',
     email: 'user@example.com',
     fullPhone: '+380991234567',
     country: 'US',
-    iso: 'US',
-    language: 'en',
     buyer: 'buyer',
     source: 'facebook',
-    clickid: 'click123',
     funnel: 'main',
-    domain: 'domain.com',
-    adsetName: 'adset',
-    adName: 'ad',
-    utmSource: 'utm_source',
-    utmCampaign: 'utm_campaign',
-    utmContent: 'utm_content',
     fbToken: 'fb-token',
     pixel: 'pixel-id',
     offerId: 'offer1',
     flowId: 'flow1',
     buyerId: 'buyer1',
-    currency: 'USD',
-    value: 10,
-    contentName: 'content',
-    contentCategory: 'category',
-    contentType: 'type',
-    userAgent: 'ua',
-    fbc: 'fbc',
-    fbp: 'fbp',
-    deviceType: 'mobile',
-    os: 'ios',
-    osVersion: '16',
-    browser: 'safari',
-    browserVersion: '16',
-    ip: '127.0.0.1',
-    externalId: 'ext123',
-    sub1: null,
-    sub2: null,
-    sub3: null,
-    sub4: null,
-    sub5: null,
-    utmPlacement: null,
-    campaignId: null,
-    adsetId: null,
-    adId: null,
-    phone: null,
   };
 
   // Mock implementation for PrismaService
@@ -131,7 +96,7 @@ describe('LeadService', () => {
       (prisma.lead.create as jest.Mock).mockResolvedValue(createdLead);
       (crmService.sendDataToAlter as jest.Mock).mockResolvedValue('alter-url');
 
-      const result = await service.createLead(leadDto);
+      const result = await service.createLead(leadDto as CreateLeadDto);
 
       expect(prisma.lead.create).toHaveBeenCalled();
       expect(hashingService.hash).toHaveBeenCalledWith('user@example.com');
@@ -161,13 +126,41 @@ describe('LeadService', () => {
       });
       (crmService.sendDataToAlter as jest.Mock).mockResolvedValue('alter-url');
 
-      await service.createLead({ ...leadDto, fname: 'test' });
+      await service.createLead({ ...leadDto, fname: 'test' } as CreateLeadDto);
       expect(logger.info).toHaveBeenCalledWith(
         'Telegram notification skipped: Lead is a test lead',
         1,
         'telegram',
       );
       expect(telegramService.sendTelegramNotification).not.toHaveBeenCalled();
+    });
+
+    it('should skip Facebook when fbToken is empty', async () => {
+      (prisma.lead.create as jest.Mock).mockResolvedValue({
+        id: 1,
+        FBData: {},
+        ConversionEvent: {},
+        DeviceInfo: {},
+      });
+      (crmService.sendDataToAlter as jest.Mock).mockResolvedValue('alter-url');
+
+      await service.createLead({ ...leadDto, fbToken: undefined } as CreateLeadDto);
+
+      expect(fbService.sendDataToFacebook).not.toHaveBeenCalled();
+    });
+
+    it('should skip Facebook when pixel is empty', async () => {
+      (prisma.lead.create as jest.Mock).mockResolvedValue({
+        id: 1,
+        FBData: {},
+        ConversionEvent: {},
+        DeviceInfo: {},
+      });
+      (crmService.sendDataToAlter as jest.Mock).mockResolvedValue('alter-url');
+
+      await service.createLead({ ...leadDto, pixel: undefined } as CreateLeadDto);
+
+      expect(fbService.sendDataToFacebook).not.toHaveBeenCalled();
     });
 
     it('should catch Facebook errors', async () => {
@@ -180,7 +173,7 @@ describe('LeadService', () => {
       (fbService.sendDataToFacebook as jest.Mock).mockRejectedValue(new Error('FB Error'));
       (crmService.sendDataToAlter as jest.Mock).mockResolvedValue('alter-url');
 
-      await service.createLead(leadDto);
+      await service.createLead(leadDto as CreateLeadDto);
       expect(logger.error).toHaveBeenCalledWith(
         'Error sending data to Facebook: FB Error',
         1,
@@ -200,7 +193,7 @@ describe('LeadService', () => {
       );
       (crmService.sendDataToAlter as jest.Mock).mockResolvedValue('alter-url');
 
-      await service.createLead(leadDto);
+      await service.createLead(leadDto as CreateLeadDto);
       expect(logger.error).toHaveBeenCalledWith(
         'Error sending Telegram notification: Telegram Error',
         1,
