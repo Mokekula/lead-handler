@@ -250,11 +250,11 @@ const LogsDashboard = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${log.severity === 'DEBUG' ? 'bg-purple-100 text-purple-800' : ''}
-                      ${log.severity === 'INFO' ? 'bg-green-100 text-green-800' : ''}
-                      ${log.severity === 'WARNING' ? 'bg-yellow-100 text-yellow-800' : ''}
-                      ${log.severity === 'ERROR' ? 'bg-orange-100 text-orange-800' : ''}
-                      ${log.severity === 'CRITICAL' ? 'bg-red-100 text-red-800' : ''}
+                      ${log.severity.toUpperCase() === 'DEBUG' ? 'bg-purple-100 text-purple-800' : ''}
+                      ${log.severity.toUpperCase() === 'INFO' ? 'bg-green-100 text-green-800' : ''}
+                      ${log.severity.toUpperCase() === 'WARNING' ? 'bg-yellow-100 text-yellow-800' : ''}
+                      ${log.severity.toUpperCase() === 'ERROR' ? 'bg-orange-100 text-orange-800' : ''}
+                      ${log.severity.toUpperCase() === 'CRITICAL' ? 'bg-red-100 text-red-800' : ''}
                     `}
                     >
                       {log.severity}
@@ -309,11 +309,11 @@ const LogsDashboard = () => {
                 <p className="font-medium dark:text-white">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                    ${selectedLog.severity === 'DEBUG' ? 'bg-purple-100 text-purple-800' : ''}
-                    ${selectedLog.severity === 'INFO' ? 'bg-green-100 text-green-800' : ''}
-                    ${selectedLog.severity === 'WARNING' ? 'bg-yellow-100 text-yellow-800' : ''}
-                    ${selectedLog.severity === 'ERROR' ? 'bg-orange-100 text-orange-800' : ''}
-                    ${selectedLog.severity === 'CRITICAL' ? 'bg-red-100 text-red-800' : ''}
+                    ${selectedLog.severity.toUpperCase() === 'DEBUG' ? 'bg-purple-100 text-purple-800' : ''}
+                    ${selectedLog.severity.toUpperCase() === 'INFO' ? 'bg-green-100 text-green-800' : ''}
+                    ${selectedLog.severity.toUpperCase() === 'WARNING' ? 'bg-yellow-100 text-yellow-800' : ''}
+                    ${selectedLog.severity.toUpperCase() === 'ERROR' ? 'bg-orange-100 text-orange-800' : ''}
+                    ${selectedLog.severity.toUpperCase() === 'CRITICAL' ? 'bg-red-100 text-red-800' : ''}
                   `}
                   >
                     {selectedLog.severity}

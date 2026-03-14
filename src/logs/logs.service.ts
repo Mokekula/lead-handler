@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateLogDto, LogSeverity } from './create-log.dto';
+import { CreateLogDto } from './create-log.dto';
+import { LogSeverity } from '@prisma/client';
 
 @Injectable()
 export class LogsService {
