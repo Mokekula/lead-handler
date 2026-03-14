@@ -3,6 +3,7 @@ import { LogsService } from 'src/logs/logs.service';
 
 @Injectable()
 export class AdminService {
+  // TODO: это не стоит хранить в памяти, нужно вынести в базу
   private isSendToRobotnik: boolean = true;
 
   constructor(private logger: LogsService) {}
