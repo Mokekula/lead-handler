@@ -100,12 +100,7 @@ export class AppService {
     // if fb token and pixel - send data to facebook
     if (createLeadDto.fb_token && createLeadDto.pixel) {
       try {
-        await this.sendDataToFacebook(
-          'Lead',
-          lead,
-          createLeadDto.fb_token,
-          createLeadDto.pixel,
-        );
+        await this.sendDataToFacebook('Lead', lead, createLeadDto.fb_token, createLeadDto.pixel);
         // await this.logger.info(`Do not sending data about registration...`, lead.id, 'facebook')
         // if (createLeadDto.funnel === 'Immediate Nextgen' || createLeadDto.funnel === 'immediate nextgen') {
         //     await this.sendDataToFacebook('Purchase', lead, createLeadDto.fb_token, createLeadDto.pixel);
@@ -155,11 +150,7 @@ export class AppService {
     destination: 'robotnik' | 'elnopy',
   ): Promise<{ currentDestination: string }> {
     this.isSendToRobotnik = destination === 'robotnik';
-    await this.logger.info(
-      `Lead destination switched to ${destination}`,
-      0,
-      'toggle',
-    );
+    await this.logger.info(`Lead destination switched to ${destination}`, 0, 'toggle');
     return {
       currentDestination: this.isSendToRobotnik ? 'robotnik' : 'elnopy',
     };
@@ -179,10 +170,7 @@ export class AppService {
     }
   }
 
-  async sendToRobotnik(
-    createLeadDto: CreateLeadDto,
-    leadId: number,
-  ): Promise<string> {
+  async sendToRobotnik(createLeadDto: CreateLeadDto, leadId: number): Promise<string> {
     try {
       const data = {
         query: `mutation CreateLeadFromApi($input: CreateLeadApiInput!) {
@@ -264,11 +252,7 @@ export class AppService {
       }
     } catch (error) {
       if (!error.response) {
-        await this.logger.error(
-          `Error sending data to Robotnik: ${error}`,
-          leadId,
-          'robotnik',
-        );
+        await this.logger.error(`Error sending data to Robotnik: ${error}`, leadId, 'robotnik');
         return 'Something went wrong, please try again later';
       }
       await this.logger.error(
@@ -302,19 +286,11 @@ export class AppService {
         if (response.status === 200) {
           await this.logger.info(`SMS sent successfully`, lead.id, 'sms');
         } else {
-          await this.logger.error(
-            `SMS sending failed: ${response.statusText}`,
-            lead.id,
-            'sms',
-          );
+          await this.logger.error(`SMS sending failed: ${response.statusText}`, lead.id, 'sms');
         }
       }
     } catch (error) {
-      await this.logger.error(
-        `SMS sending error: ${error.message}`,
-        lead.id,
-        'sms',
-      );
+      await this.logger.error(`SMS sending error: ${error.message}`, lead.id, 'sms');
     }
   }
 
@@ -400,8 +376,7 @@ export class AppService {
         }
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || error.message || 'Unknown error';
+      const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
       await this.logger.error(
         `Elnopy API Error: ${JSON.stringify({
           message: error.message,
@@ -456,11 +431,7 @@ export class AppService {
       domain: createLeadDto.domain,
     };
 
-    await this.logger.info(
-      `Data for Alter: ${JSON.stringify(dataForAlter)}`,
-      leadId,
-      'alter',
-    );
+    await this.logger.info(`Data for Alter: ${JSON.stringify(dataForAlter)}`, leadId, 'alter');
 
     try {
       const response = await axios({
@@ -490,11 +461,7 @@ export class AppService {
         return response.data.error;
       }
     } catch (error) {
-      await this.logger.error(
-        `Alter API Error: ${JSON.stringify(error)}`,
-        leadId,
-        'alter',
-      );
+      await this.logger.error(`Alter API Error: ${JSON.stringify(error)}`, leadId, 'alter');
       throw new Error(error.message);
     }
   }
@@ -523,9 +490,7 @@ export class AppService {
           event_id: eventId,
           action_source: 'website',
           user_data: (({ id, leadId, ...rest }) => rest)(leadData.FBData),
-          custom_data: (({ id, leadId, createdAt, ...rest }) => rest)(
-            leadData.ConversionEvent,
-          ),
+          custom_data: (({ id, leadId, createdAt, ...rest }) => rest)(leadData.ConversionEvent),
         },
       ],
       // Uncomment for testing
@@ -586,11 +551,7 @@ export class AppService {
           // Добавляем экспоненциальную задержку перед следующей попыткой
           // 1 попытка - 1 секунда, 2 попытка - 2 секунды, 3 попытка - 4 секунды и т.д.
           const delayMs = 1000 * Math.pow(2, attempt - 1);
-          await this.logger.info(
-            `Retrying in ${delayMs}ms`,
-            leadData.id,
-            'facebook',
-          );
+          await this.logger.info(`Retrying in ${delayMs}ms`, leadData.id, 'facebook');
           await new Promise((resolve) => setTimeout(resolve, delayMs));
         }
 
@@ -611,7 +572,6 @@ export class AppService {
     throw lastError;
   }
 
-
   /**
    * Computes the SHA-256 hash of a given input message.
    *
@@ -621,17 +581,16 @@ export class AppService {
   private sha256(message: string): string {
     // SHA-256 constants
     const K = [
-      0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
-      0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
-      0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
-      0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-      0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
-      0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
-      0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
-      0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-      0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
-      0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
-      0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+      0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4,
+      0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe,
+      0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f,
+      0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+      0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
+      0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+      0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116,
+      0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+      0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7,
+      0xc67178f2,
     ];
 
     // Helper functions
@@ -653,9 +612,9 @@ export class AppService {
     };
 
     // Initial hash values (first 32 bits of the fractional parts of the square roots of the first 8 primes)
-    let H = [
-      0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c,
-      0x1f83d9ab, 0x5be0cd19,
+    const H = [
+      0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
+      0x5be0cd19,
     ];
 
     // Pre-processing
@@ -687,12 +646,7 @@ export class AppService {
       }
 
       for (let j = 16; j < 64; j++) {
-        words[j] =
-          (σ1(words[j - 2]) +
-            words[j - 7] +
-            σ0(words[j - 15]) +
-            words[j - 16]) >>>
-          0;
+        words[j] = (σ1(words[j - 2]) + words[j - 7] + σ0(words[j - 15]) + words[j - 16]) >>> 0;
       }
 
       // Initialize working variables
@@ -853,10 +807,7 @@ export class AppService {
    * @param {CreateLeadDto} createLeadDto - The DTO containing lead information
    * @return {Promise<void>} A promise that resolves when all notifications are sent
    */
-  private async sendTelegramNotification(
-    lead: Lead,
-    createLeadDto: CreateLeadDto,
-  ): Promise<void> {
+  private async sendTelegramNotification(lead: Lead, createLeadDto: CreateLeadDto): Promise<void> {
     if (!this.telegramBotToken) {
       await this.logger.info(
         `Telegram notification skipped: Missing bot token`,
