@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import { Env } from 'src/common/config/env.validation';
-import { CreateLeadDto } from 'src/lead.dto';
+import { CreateLeadDto } from 'src/modules/lead/dto/create-lead.dto';
 import { LogsService } from 'src/logs/logs.service';
 
 @Injectable()

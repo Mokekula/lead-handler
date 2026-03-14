@@ -7,6 +7,7 @@ import { LogsModule } from './logs/logs.module';
 import { validate } from './common/config/env.validation';
 import { HashingService } from './common/utils/hashing.service';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
+import { LeadModule } from './modules/lead/lead.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { IntegrationsModule } from './modules/integrations/integrations.module';
     PrismaModule,
     LogsModule,
     IntegrationsModule,
+    LeadModule,
   ],
   controllers: [AppController],
   providers: [AppService, HashingService],
