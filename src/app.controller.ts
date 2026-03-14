@@ -23,28 +23,4 @@ export class AppController {
   async getCurrentDestination(): Promise<{ currentDestination: string }> {
     return this.appService.getCurrentDestination();
   }
-
-  @Post('telegram/webhook')
-  async handleTelegramWebhook(@Body() update: any) {
-    // Process commands from Telegram
-    if (update.message && update.message.text) {
-      const chatId = update.message.chat.id.toString();
-      const text = update.message.text;
-
-      // Handle /subscribe command
-      if (text === '/subscribe') {
-        const name = update.message.from.first_name;
-        await this.appService.addTelegramSubscriber(chatId, name);
-        return { success: true, message: 'Subscribed successfully' };
-      }
-
-      // Handle /unsubscribe command
-      if (text === '/unsubscribe') {
-        await this.appService.removeTelegramSubscriber(chatId);
-        return { success: true, message: 'Unsubscribed successfully' };
-      }
-    }
-
-    return { success: true };
-  }
 }
