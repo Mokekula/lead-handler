@@ -23,6 +23,8 @@ export class LeadService {
     private facebookService: FacebookService,
   ) {}
 
+  // TODO: тут бажано додати інтеграційні тести для перевірки всього ланцюжка від створення ліда до відправки даних у фейсбук, телегу та CRM.
+  // TODO: також бажано додати асінхронну обробку через черги (наприклад, BullMQ+Redis) для відправки даних у фейсбук (facebook-queue), телегу (telegram-queue) та CRM (crm-queue), щоб не блокувати основний потік обробки ліда
   async createLead(createLeadDto: CreateLeadDto): Promise<string> {
     const lead = await this.prisma.lead.create({
       data: {

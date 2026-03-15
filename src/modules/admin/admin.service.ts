@@ -7,7 +7,7 @@ import { LogsService } from '../logs/logs.service';
  */
 @Injectable()
 export class AdminService {
-  // TODO: это не стоит хранить в памяти, нужно вынести в базу
+  // TODO: не бажано зберігати стан в пам'яті, краще зберігати в базі даних або кеші
   private isSendToRobotnik: boolean = true;
 
   constructor(private logger: LogsService) {}
