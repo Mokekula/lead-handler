@@ -47,7 +47,7 @@ HUSTLE_TEAM_ROBOTNIK_URL=
 
 ```sh
 1. створити .env файл зі значеннями
-2. docker compose -f docker-compose.dev.yml up --build -d
+2. docker compose -f compose.dev.yaml up --build -d
 ```
 
 ## Рефакторинг
@@ -69,6 +69,7 @@ HUSTLE_TEAM_ROBOTNIK_URL=
 ### База даних
 
 Очищення схеми Prisma:
+
 - Видалити дублікат `Lead.fullphone` (використовувати `fullPhone`).
 - Виправити зв'язок `Logs` з `Lead` (немає `Lead[]` на `Logs`).
 
@@ -88,15 +89,15 @@ HUSTLE_TEAM_ROBOTNIK_URL=
 
 ## Стек технологій
 
-| Компонент | Технологія |
-|---|---|
-| Backend Framework | NestJS (v10.0.0) |
-| Мова | TypeScript (v5.1.3) |
-| ORM | Prisma (v6.5.0) |
-| HTTP-клієнт | Axios (v1.8.3) |
-| Валідація | class-validator (v0.14.1), class-transformer (v0.5.1) |
-| Тестування | Jest (v29.5.0) |
-| Пакетний менеджер | npm |
+| Компонент         | Технологія                                            |
+| ----------------- | ----------------------------------------------------- |
+| Backend Framework | NestJS (v10.0.0)                                      |
+| Мова              | TypeScript (v5.1.3)                                   |
+| ORM               | Prisma (v6.5.0)                                       |
+| HTTP-клієнт       | Axios (v1.8.3)                                        |
+| Валідація         | class-validator (v0.14.1), class-transformer (v0.5.1) |
+| Тестування        | Jest (v29.5.0)                                        |
+| Пакетний менеджер | npm                                                   |
 
 ## Структура проєкту
 
@@ -114,12 +115,14 @@ HUSTLE_TEAM_ROBOTNIK_URL=
 ### Ендпоінти
 
 #### `POST /registration`
+
 - **Призначення:** Обробляє дані реєстрації ліда
 - **Контролер:** `AppController.register()`
 - **DTO:** `CreateLeadDto`
 - **Повертає:** Рядок з результатом обробки
 
 #### `POST /telegram/webhook`
+
 - **Призначення:** Обробляє події вебхука Telegram-бота
 - **Контролер:** `AppController.handleTelegramWebhook()`
 - **Підтримувані команди:**
@@ -131,9 +134,9 @@ HUSTLE_TEAM_ROBOTNIK_URL=
 
 ### Деталі сервера
 
-| Параметр | Значення |
-|---|---|
-| Порт | 4000 |
+| Параметр   | Значення  |
+| ---------- | --------- |
+| Порт       | 4000      |
 | Менеджмент | FastPanel |
 
 ### Конфігурація Nginx
