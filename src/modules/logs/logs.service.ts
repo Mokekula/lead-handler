@@ -4,6 +4,11 @@ import { LogSeverity } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LogsFilterParams } from './dto/logs-filter.dto';
 
+/**
+ * Structured logging service with severity levels.
+ * Persists log entries to database with filtering, pagination,
+ * and context-based querying. Used across all services.
+ */
 @Injectable()
 export class LogsService {
   constructor(private prisma: PrismaService) {}

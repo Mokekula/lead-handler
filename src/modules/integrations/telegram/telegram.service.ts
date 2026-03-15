@@ -7,6 +7,11 @@ import { CreateLeadDto } from 'src/modules/lead/dto/create-lead.dto';
 import { LogsService } from 'src/modules/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+/**
+ * Telegram Bot API integration service.
+ * Manages subscriber list and sends formatted lead notifications
+ * to all active subscribers via Telegram Bot API.
+ */
 @Injectable()
 export class TelegramService {
   private readonly telegramBotToken: string;

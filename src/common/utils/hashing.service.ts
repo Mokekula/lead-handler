@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 
+/**
+ * Cryptographic utility service.
+ * Provides SHA-256 hashing for PII data (email, phone) before sending to external APIs.
+ */
 @Injectable()
 export class HashingService {
   /**

@@ -7,6 +7,11 @@ import { TelegramService } from '../integrations/telegram/telegram.service';
 import { FacebookService } from '../integrations/facebook/facebook.service';
 import { CreateLeadDto } from './dto/create-lead.dto';
 
+/**
+ * Core lead processing orchestrator.
+ * Creates lead records with related data (FBData, ConversionEvent, DeviceInfo),
+ * then dispatches to Facebook Pixel, Telegram notifications, and CRM integration.
+ */
 @Injectable()
 export class LeadService {
   constructor(

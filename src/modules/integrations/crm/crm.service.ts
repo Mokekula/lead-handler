@@ -6,6 +6,11 @@ import { CreateLeadDto } from 'src/modules/lead/dto/create-lead.dto';
 import { LogsService } from 'src/modules/logs/logs.service';
 import { BUYER_IDS_MAP, createBuyerTokensMap } from 'src/common/config/buyers.const';
 
+/**
+ * Multi-CRM integration service.
+ * Routes leads to Robotnik (GraphQL), Elnopy (REST), or AlterCPA (REST)
+ * based on buyer configuration. Returns autologin URL on success.
+ */
 @Injectable()
 export class CrmService {
   constructor(

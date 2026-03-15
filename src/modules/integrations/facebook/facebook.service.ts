@@ -2,6 +2,11 @@ import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 import { LogsService } from 'src/modules/logs/logs.service';
 
+/**
+ * Facebook Conversions API integration service.
+ * Sends lead events to Facebook Pixel with hashed PII data
+ * and exponential backoff retry logic (max 3 attempts).
+ */
 @Injectable()
 export class FacebookService {
   constructor(private logger: LogsService) {}

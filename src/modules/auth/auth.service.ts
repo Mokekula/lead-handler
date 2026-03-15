@@ -3,6 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Env } from 'src/common/config/env.validation';
 
+/**
+ * Admin authentication service.
+ * Validates admin password and issues JWT access tokens.
+ */
 @Injectable()
 export class AuthService {
   constructor(

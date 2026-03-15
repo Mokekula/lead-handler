@@ -5,6 +5,10 @@ import { Lead } from '@prisma/client';
 import { Env } from 'src/common/config/env.validation';
 import { LogsService } from 'src/modules/logs/logs.service';
 
+/**
+ * SMS notification service via SMS Club API.
+ * Sends confirmation messages to non-test leads with valid phone numbers.
+ */
 @Injectable()
 export class SmsService {
   constructor(

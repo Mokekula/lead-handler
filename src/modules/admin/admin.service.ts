@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { LogsService } from '../logs/logs.service';
 
+/**
+ * Admin control service for managing lead routing.
+ * Handles toggling between CRM destinations (Robotnik/Elnopy).
+ */
 @Injectable()
 export class AdminService {
   // TODO: это не стоит хранить в памяти, нужно вынести в базу
